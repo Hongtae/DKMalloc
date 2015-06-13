@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="DKMalloc">
+      <UniqueIdentifier>{f594d024-5d9b-4ffd-9d7e-0f7b5658d181}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DKMalloc\DKMalloc.cpp">
+      <Filter>DKMalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="DKMalloc\DKMemory.cpp">
+      <Filter>DKMalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="DKMalloc\DKAllocator.cpp">
+      <Filter>DKMalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="DKMalloc\DKAllocatorChain.cpp">
+      <Filter>DKMalloc</Filter>
+    </ClCompile>
+    <ClCompile Include="DKTimer.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DKMalloc\DKMalloc.h">
+      <Filter>DKMalloc</Filter>
+    </ClInclude>
+    <ClInclude Include="DKMalloc\DKFixedSizeAllocator.h">
+      <Filter>DKMalloc</Filter>
+    </ClInclude>
+    <ClInclude Include="DKMalloc\DKDef.h">
+      <Filter>DKMalloc</Filter>
+    </ClInclude>
+    <ClInclude Include="DKMalloc\DKMemory.h">
+      <Filter>DKMalloc</Filter>
+    </ClInclude>
+    <ClInclude Include="DKMalloc\DKAllocator.h">
+      <Filter>DKMalloc</Filter>
+    </ClInclude>
+    <ClInclude Include="DKMalloc\DKAllocatorChain.h">
+      <Filter>DKMalloc</Filter>
+    </ClInclude>
+    <ClInclude Include="DKMalloc\DKSpinLock.h">
+      <Filter>DKMalloc</Filter>
+    </ClInclude>
+    <ClInclude Include="DKTimer.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+</Project>

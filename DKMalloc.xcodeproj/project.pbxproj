@@ -1,0 +1,306 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		84768FCF1B1D5DEE0006DD7C /* DKTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84768FCD1B1D5DEE0006DD7C /* DKTimer.cpp */; };
+		8476900D1B216E3B0006DD7C /* DKMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8476900C1B216E3B0006DD7C /* DKMemory.cpp */; };
+		847B55891B1C8DB60004A4A6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 847B55881B1C8DB60004A4A6 /* main.cpp */; };
+		84D3E2111B27180700DE6687 /* DKMalloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84D3E2101B27180700DE6687 /* DKMalloc.cpp */; };
+		84D3E22C1B29BC9500DE6687 /* DKAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84D3E2281B29BC9500DE6687 /* DKAllocator.cpp */; };
+		84D3E22D1B29BC9500DE6687 /* DKAllocatorChain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84D3E22A1B29BC9500DE6687 /* DKAllocatorChain.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		847B55831B1C8DB60004A4A6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		84768FCD1B1D5DEE0006DD7C /* DKTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DKTimer.cpp; sourceTree = "<group>"; };
+		84768FCE1B1D5DEE0006DD7C /* DKTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKTimer.h; sourceTree = "<group>"; };
+		8476900C1B216E3B0006DD7C /* DKMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DKMemory.cpp; path = DKMalloc/DKMemory.cpp; sourceTree = "<group>"; };
+		8476900E1B216E7C0006DD7C /* DKMalloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKMalloc.h; path = DKMalloc/DKMalloc.h; sourceTree = "<group>"; };
+		847B55851B1C8DB60004A4A6 /* DKMallocTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DKMallocTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		847B55881B1C8DB60004A4A6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		84D3E2021B247FAA00DE6687 /* DKFixedSizeAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKFixedSizeAllocator.h; path = DKMalloc/DKFixedSizeAllocator.h; sourceTree = "<group>"; };
+		84D3E2031B247FEB00DE6687 /* DKDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKDef.h; path = DKMalloc/DKDef.h; sourceTree = "<group>"; };
+		84D3E2101B27180700DE6687 /* DKMalloc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DKMalloc.cpp; path = DKMalloc/DKMalloc.cpp; sourceTree = "<group>"; };
+		84D3E2121B27182E00DE6687 /* DKMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKMemory.h; path = DKMalloc/DKMemory.h; sourceTree = "<group>"; };
+		84D3E2281B29BC9500DE6687 /* DKAllocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DKAllocator.cpp; path = DKMalloc/DKAllocator.cpp; sourceTree = "<group>"; };
+		84D3E2291B29BC9500DE6687 /* DKAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKAllocator.h; path = DKMalloc/DKAllocator.h; sourceTree = "<group>"; };
+		84D3E22A1B29BC9500DE6687 /* DKAllocatorChain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DKAllocatorChain.cpp; path = DKMalloc/DKAllocatorChain.cpp; sourceTree = "<group>"; };
+		84D3E22B1B29BC9500DE6687 /* DKAllocatorChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKAllocatorChain.h; path = DKMalloc/DKAllocatorChain.h; sourceTree = "<group>"; };
+		84D3E22E1B29BD2200DE6687 /* DKSpinLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKSpinLock.h; path = DKMalloc/DKSpinLock.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		847B55821B1C8DB60004A4A6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		847B557C1B1C8DB60004A4A6 = {
+			isa = PBXGroup;
+			children = (
+				84D3E23D1B2B0CBD00DE6687 /* DKMalloc */,
+				847B55861B1C8DB60004A4A6 /* Products */,
+				84D3E23E1B2B0D1000DE6687 /* Sources */,
+			);
+			sourceTree = "<group>";
+		};
+		847B55861B1C8DB60004A4A6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				847B55851B1C8DB60004A4A6 /* DKMallocTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		84D3E23D1B2B0CBD00DE6687 /* DKMalloc */ = {
+			isa = PBXGroup;
+			children = (
+				84D3E22E1B29BD2200DE6687 /* DKSpinLock.h */,
+				84D3E2281B29BC9500DE6687 /* DKAllocator.cpp */,
+				84D3E2291B29BC9500DE6687 /* DKAllocator.h */,
+				84D3E22A1B29BC9500DE6687 /* DKAllocatorChain.cpp */,
+				84D3E22B1B29BC9500DE6687 /* DKAllocatorChain.h */,
+				84D3E2031B247FEB00DE6687 /* DKDef.h */,
+				84D3E2021B247FAA00DE6687 /* DKFixedSizeAllocator.h */,
+				84D3E2101B27180700DE6687 /* DKMalloc.cpp */,
+				8476900E1B216E7C0006DD7C /* DKMalloc.h */,
+				8476900C1B216E3B0006DD7C /* DKMemory.cpp */,
+				84D3E2121B27182E00DE6687 /* DKMemory.h */,
+			);
+			name = DKMalloc;
+			sourceTree = "<group>";
+		};
+		84D3E23E1B2B0D1000DE6687 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				84768FCD1B1D5DEE0006DD7C /* DKTimer.cpp */,
+				84768FCE1B1D5DEE0006DD7C /* DKTimer.h */,
+				847B55881B1C8DB60004A4A6 /* main.cpp */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		847B55841B1C8DB60004A4A6 /* DKMallocTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 847B558C1B1C8DB60004A4A6 /* Build configuration list for PBXNativeTarget "DKMallocTest" */;
+			buildPhases = (
+				847B55811B1C8DB60004A4A6 /* Sources */,
+				847B55821B1C8DB60004A4A6 /* Frameworks */,
+				847B55831B1C8DB60004A4A6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DKMallocTest;
+			productName = BitArrayTest;
+			productReference = 847B55851B1C8DB60004A4A6 /* DKMallocTest */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		847B557D1B1C8DB60004A4A6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = tiff;
+				TargetAttributes = {
+					847B55841B1C8DB60004A4A6 = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 847B55801B1C8DB60004A4A6 /* Build configuration list for PBXProject "DKMalloc" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 847B557C1B1C8DB60004A4A6;
+			productRefGroup = 847B55861B1C8DB60004A4A6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				847B55841B1C8DB60004A4A6 /* DKMallocTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		847B55811B1C8DB60004A4A6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84D3E2111B27180700DE6687 /* DKMalloc.cpp in Sources */,
+				84D3E22C1B29BC9500DE6687 /* DKAllocator.cpp in Sources */,
+				84768FCF1B1D5DEE0006DD7C /* DKTimer.cpp in Sources */,
+				847B55891B1C8DB60004A4A6 /* main.cpp in Sources */,
+				84D3E22D1B29BC9500DE6687 /* DKAllocatorChain.cpp in Sources */,
+				8476900D1B216E3B0006DD7C /* DKMemory.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		847B558A1B1C8DB60004A4A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		847B558B1B1C8DB60004A4A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		847B558D1B1C8DB60004A4A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					TBB/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TBB/lib_osx",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		847B558E1B1C8DB60004A4A6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					TBB/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TBB/lib_osx",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		847B55801B1C8DB60004A4A6 /* Build configuration list for PBXProject "DKMalloc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				847B558A1B1C8DB60004A4A6 /* Debug */,
+				847B558B1B1C8DB60004A4A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		847B558C1B1C8DB60004A4A6 /* Build configuration list for PBXNativeTarget "DKMallocTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				847B558D1B1C8DB60004A4A6 /* Debug */,
+				847B558E1B1C8DB60004A4A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 847B557D1B1C8DB60004A4A6 /* Project object */;
+}
