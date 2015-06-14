@@ -368,6 +368,9 @@ namespace DKFoundation
 			}
 		}
 
+		DKFixedSizeAllocator(const DKFixedSizeAllocator&) = delete;
+		DKFixedSizeAllocator& operator = (const DKFixedSizeAllocator&) = delete;
+
 	private:
 		FORCEINLINE bool AllocChunk(ChunkInfo* info)
 		{
