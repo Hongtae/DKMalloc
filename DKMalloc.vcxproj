@@ -100,10 +100,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)TBB/lib/ia32/vc12</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>echo Copying DLLs...
-xcopy /Y /D /E /R /Q "$(SolutionDir)TBB\bin\ia32\vc12\tbbmalloc_debug.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -119,10 +116,7 @@ xcopy /Y /D /E /R /Q "$(SolutionDir)TBB\bin\ia32\vc12\tbbmalloc_debug.dll" "$(Ou
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)TBB/lib/intel64/vc12</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>echo Copying DLLs...
-xcopy /Y /D /E /R /Q "$(SolutionDir)TBB\bin\intel64\vc12\tbbmalloc_debug.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -143,10 +137,7 @@ xcopy /Y /D /E /R /Q "$(SolutionDir)TBB\bin\intel64\vc12\tbbmalloc_debug.dll" "$
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)TBB/lib/ia32/vc12</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>echo Copying DLLs...
-xcopy /Y /D /E /R /Q "$(SolutionDir)TBB\bin\ia32\vc12\tbbmalloc.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -167,10 +158,7 @@ xcopy /Y /D /E /R /Q "$(SolutionDir)TBB\bin\ia32\vc12\tbbmalloc.dll" "$(OutDir)"
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)TBB/lib/intel64/vc12</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>echo Copying DLLs...
-xcopy /Y /D /E /R /Q "$(SolutionDir)TBB\bin\intel64\vc12\tbbmalloc.dll" "$(OutDir)"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DKMalloc\DKAllocator.cpp" />

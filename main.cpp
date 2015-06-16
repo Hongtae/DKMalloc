@@ -2,6 +2,7 @@
 #ifdef _WIN32
 #define _CRT_RAND_S
 #include "targetver.h"
+#include <Windows.h>
 #include <tchar.h>
 #endif
 
