@@ -46,13 +46,13 @@
 
 /*
   DK allocator, allocate memory.
+  Returned memory address will be aligned with 16-bytes at least.
 */
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-	  /* if size <= 4096, returned address will be 16 bytes-aligned. */
 	void* DKMalloc(size_t size);
 	void* DKRealloc(void* ptr, size_t size);
 	void DKFree(void* ptr);

@@ -346,6 +346,7 @@ namespace DKFoundation
 			enum { MaxChunkSize = UnitAllocator::UnitSize };
 			enum { NumUnits = (MaxChunkSize - Alignment + 1) / UnitSize };
 			static_assert((UnitSize % Alignment) == 0, "Wrong unit size!");
+			static_assert((UnitSize % 16) == 0, "Invalid size, size must be aligned with 16bytes");
 
 			struct Wrapper : public AllocatorInterface
 			{
@@ -397,13 +398,13 @@ namespace DKFoundation
 				// Initializer < Size, SizeOffset, Alignment, Index, Count>
 
 				int count = 0;
-				// 16 ~ 1024 (16 bytes offsets, 16 bytes aligned)
-				count += Initializer< (1 << 4), 16, 16, 0, 64>::Init(allocators);
-				// 1088 ~ 4096 (64 bytes offsets, 16 bytes aligned)
-				count += Initializer< (1 << 10) + 64, 64, 16, 64, 48>::Init(allocators);
-				// 4532 ~ 8192 (256 bytes offsets, 1 bytes aligned)
+				// 16 ~ 1024 (16 bytes offsets)
+				count += Initializer< (1 << 4), 16, 1, 0, 64>::Init(allocators);
+				// 1088 ~ 4096 (64 bytes offsets)
+				count += Initializer< (1 << 10) + 64, 64, 1, 64, 48>::Init(allocators);
+				// 4532 ~ 8192 (256 bytes offsets)
 				count += Initializer< (1 << 12) + 256, 256, 1, 112, 16>::Init(allocators);
-				// 9216 ~ 16384 (1024 bytes offset, 1 bytes aligned)
+				// 9216 ~ 16384 (1024 bytes offset)
 				count += Initializer< (1 << 13) + 1024, 1024, 1, 128, 8>::Init(allocators);
 
 				DKASSERT_MEM_DEBUG(count == NumAllocators);
