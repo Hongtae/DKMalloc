@@ -334,6 +334,12 @@ namespace DKFoundation
 			return numChunks * (MaxUnitsPerChunkSize + sizeof(ChunkInfo));
 		}
 
+		size_t NumberOfAllocatedUnits(void) const
+		{
+			CriticalSection guard(lock);
+			return numAllocated;
+		}
+
 		DKFixedSizeAllocator(void)
 			: chunkTable(NULL)
 			, cachedChunk(NULL)
@@ -345,23 +351,14 @@ namespace DKFoundation
 
 		~DKFixedSizeAllocator(void)
 		{
-			//DKASSERT_MEM_DEBUG(numAllocated == 0);
+			DKASSERT_MEM_DEBUG(numAllocated == 0);
 			if (numChunks > 0)
 			{
 				DKASSERT_MEM_DEBUG(chunkTable != NULL);
 				for (size_t i = 0; i < numChunks; ++i)
 				{
-					if (chunkTable[i].occupied > 0)
-					{
-						DKLog("Memory Leak Warning: %u objects (%d bytes unit) still occupied. (%p - %p)\n",
-							  chunkTable[i].occupied, UnitSize,
-							  (void*)chunkTable[i].address,
-							  (void*)(chunkTable[i].address + MaxUnitsPerChunkSize));
-					}
-					else
-					{
-						FreeChunk(&chunkTable[i]);
-					}
+					DKASSERT_MEM_DEBUG(chunkTable[i].occupied == 0);
+					FreeChunk(&chunkTable[i]);
 				}
 				DKASSERT_MEM_DEBUG(emptyChunks == 0);
 				BaseAllocator::Free(chunkTable);

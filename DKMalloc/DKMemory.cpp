@@ -323,6 +323,8 @@ namespace DKFoundation
 			virtual bool ConditionalDealloc(void*) = 0;
 			virtual size_t ConditionalPurge(size_t) = 0;
 			virtual bool ConditionalDeallocAndPurge(void*, size_t, size_t*) = 0;
+
+			virtual size_t NumberOfAllocatedUnits(void) const = 0;
 		};
 
 		struct AllocatorUnit
@@ -364,6 +366,8 @@ namespace DKFoundation
 					return allocator.ConditionalDeallocAndPurge(p, s, bp);
 				}
 
+				size_t NumberOfAllocatedUnits(void) const override	{ return allocator.NumberOfAllocatedUnits(); }
+
 				using Allocator = DKFixedSizeAllocator<UnitSize, Alignment, NumUnits, DKSpinLock, SystemHeapAllocator, UnitAllocator>;
 				Allocator allocator;
 				static_assert(Allocator::AlignedChunkSize <= MaxChunkSize, "Wrong size!");
@@ -389,11 +393,13 @@ namespace DKFoundation
 		{
 			enum { NumAllocators = 136 };
 
-			AllocatorPool(void)
+			AllocatorPool(void) : backend(NULL)
 			{
 #ifdef _WIN32
-				SystemHeapAllocator::heap = ::HeapCreate(0, (1<<16), 0);
+				// reserve 16MB heap
+				SystemHeapAllocator::heap = ::HeapCreate(0, (1<<24), 0);
 #endif
+				backend = ::new (SystemHeapAllocator::Alloc(sizeof(BackendAllocator))) BackendAllocator();
 
 				// Initializer < Size, SizeOffset, Alignment, Index, Count>
 
@@ -426,17 +432,39 @@ namespace DKFoundation
 
 			~AllocatorPool(void)
 			{
+				bool cleanupHeap = true;
 				for (int i = 0; i < NumAllocators; ++i)
 				{
-					allocators[i].allocator->~AllocatorInterface();
+					size_t numAllocated = allocators[i].allocator->NumberOfAllocatedUnits();
+					if ( numAllocated > 0)
+					{
+						DKLog("MEMORY LEAK WARNING: %lu objects (%d bytes unit) still occupied.\n",
+							  numAllocated, (int)allocators[i].unitSize);
+						cleanupHeap = false;
+					}
+					else
+					{
+						allocators[i].allocator->~AllocatorInterface();
+					}
+
 					SystemHeapAllocator::Free(allocators[i].allocator);
 				}
 
-				backend.PurgeThreshold(0);
+				backend->PurgeThreshold(0);
+
+				if (cleanupHeap)
+				{
+					backend->~BackendAllocator();
+					SystemHeapAllocator::Free(backend);
 
 #ifdef _WIN32
-				::HeapDestroy(SystemHeapAllocator::heap);
+					::HeapDestroy(SystemHeapAllocator::heap);
 #endif
+				}
+				else
+				{
+					DKLog("Warning: Cleaning Memory-Pool has been cancelled. (Leak detected)\n");
+				}
 			}
 
 			void* Alloc(size_t s)
@@ -530,14 +558,14 @@ namespace DKFoundation
 				}
 				if (bytesPurged > 0)
 				{
-					return backend.PurgeThreshold(0);
+					return backend->PurgeThreshold(0);
 				}
 				return 0;
 			}
 
 			FORCEINLINE size_t Size(void) const
 			{
-				return backend.Size();
+				return backend->Size();
 			}
 
 			FORCEINLINE DKMemoryLocation Location(void) const
@@ -547,7 +575,7 @@ namespace DKFoundation
 
 			FORCEINLINE BackendAllocator* Backend(void)
 			{
-				return &backend;
+				return backend;
 			}
 
 		private:
@@ -562,7 +590,7 @@ namespace DKFoundation
 				if (unit->allocator->ConditionalDeallocAndPurge(p, threshold, &purged))
 				{
 					if (purged > 0)
-						backend.PurgeThreshold(16);
+						backend->PurgeThreshold(16);
 					return true;
 				}
 				return false;
@@ -589,13 +617,13 @@ namespace DKFoundation
 			}
 			FORCEINLINE AllocatorUnit* FindAllocator(void* p)
 			{
-				BackendAllocator::Index index = backend.IndexForAddress(p);
+				BackendAllocator::Index index = backend->IndexForAddress(p);
 				if (index != BackendAllocator::IndexNotFound)
 					return &allocators[index];
 				return NULL;
 			}
 
-			BackendAllocator backend;
+			BackendAllocator* backend;
 			AllocatorUnit allocators[NumAllocators];
 			size_t maxUnitSize;
 		};
@@ -1265,5 +1293,3 @@ namespace DKFoundation
 		return GetAllocatorPool()->Size();
 	}
 }
-
-
