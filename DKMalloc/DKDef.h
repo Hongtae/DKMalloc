@@ -104,7 +104,7 @@
 // Inline macros
 #ifndef FORCEINLINE
 #ifdef DKLIB_DEBUG_ENABLED
-#define FORCEINLINE
+#define FORCEINLINE inline
 #else
 #ifdef _MSC_VER
 #define FORCEINLINE __forceinline
