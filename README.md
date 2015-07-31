@@ -1,8 +1,8 @@
 # DKMalloc
 Memory pool allocator. C / C++
 
-This is simplified 'Memory Allocator' part of DKLib.  
-Full version of DKLib: http://github.com/tiff2766/DKLib
+This is simplified 'Memory Allocator' part of DKGL.  
+Full version of DKGL: http://github.com/hongtae/DKGL
 
 ## Platform
 - Windows (x86, x64)
