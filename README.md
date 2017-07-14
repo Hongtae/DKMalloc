@@ -1,6 +1,7 @@
 # DKMalloc
 Memory pool allocator. C / C++.  
 Optimized for quick alloc, realloc, free.  
+The allocated memory is always **16 bytes aligned**.
 
 You can use DKMalloc for your project.  
 Build DKMalloc as a shared library / DLL for C projects that can not use C\++.  
