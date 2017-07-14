@@ -2,10 +2,10 @@
  File: DKAllocatorChain.cpp
  Author: Hongtae Kim (tiff2766@gmail.com)
 
- Copyright (c) 2015 Hongtae Kim. All rights reserved.
+ Copyright (c) 2015,2017 Hongtae Kim. All rights reserved.
 
- NOTE: This is simplified 'Memory Allocator' part of DKLib.
-  Full version of DKLib: http://github.com/tiff2766/DKLib
+ NOTE: This is simplified 'Memory Allocator' part of DKGL.
+ Full version of DKGL: https://github.com/DKGL/DKGL
 
  License: BSD-3
 *******************************************************************************/
@@ -43,12 +43,16 @@
 
 #include <new>
 #include "DKAllocatorChain.h"
+#include "DKMemory.h"
 #include "DKSpinLock.h"
 
 namespace DKFoundation
 {
 	namespace Private
 	{
+		// default Chain-Holder
+		static DKAllocatorChain::Maintainer maintainer;
+
 		void CreateAllocationTable(void);
 		void DestroyAllocationTable(void);
 
@@ -73,17 +77,22 @@ namespace DKFoundation
 			}
 			~Chain(void)
 			{
-				DestroyAllocationTable();
-				while (true)
+				while (true) // delete allocators in reverse order.
 				{
 					lock.Lock();
 					DKAllocatorChain* p = first;
 					lock.Unlock();
+
 					if (p)
+					{
+						while (p->NextAllocator())
+							p = p->NextAllocator();
 						delete p;
+					}
 					else
 						break;
 				}
+				DestroyAllocationTable();
 
 				lock.Lock();
 				instance = NULL;
@@ -107,11 +116,16 @@ namespace DKFoundation
 				this->refCount--;
 				return this->refCount;
 			}
+			void* operator new (size_t s)
+			{
+				return DKMemoryHeapAlloc(s);
+			}
+			void operator delete (void* p) noexcept
+			{
+				DKMemoryHeapFree(p);
+			}
 		};
 		Chain* Chain::instance;
-
-		// default Chain-Holder
-		static DKAllocatorChain::StaticInitializer init;
 	}
 }
 
@@ -120,7 +134,7 @@ using namespace DKFoundation::Private;
 
 
 DKAllocatorChain::DKAllocatorChain(void)
-: next(NULL)
+	: next(NULL)
 {
 	Chain* c = Chain::Instance();
 	ScopedSpinLock guard(c->lock);
@@ -137,7 +151,7 @@ DKAllocatorChain::DKAllocatorChain(void)
 	}
 }
 
-DKAllocatorChain::~DKAllocatorChain(void)
+DKAllocatorChain::~DKAllocatorChain(void) noexcept(!DKGL_MEMORY_DEBUG)
 {
 	Chain* c = Chain::Instance();
 	ScopedSpinLock guard(c->lock);
@@ -180,37 +194,30 @@ DKAllocatorChain* DKAllocatorChain::NextAllocator(void)
 	return next;
 }
 
-DKAllocatorChain::StaticInitializer::StaticInitializer(void)
+DKAllocatorChain::Maintainer::Maintainer(void)
 {
 	Chain* c = Chain::Instance();
-	DKASSERT_MEM_DEBUG( c != NULL );
+	DKASSERT_STD_DEBUG( c != NULL );
 	Chain::RefCount ref = c->IncrementRef();
-	DKASSERT_MEM_DEBUG( ref > 0);
-	if (ref == 0)
-	{
-		DKLog("ERROR: DKAllocatorChain invalid reference.");
-	}
+	DKASSERT_STD_DEBUG( ref >= 0);
 }
 
-DKAllocatorChain::StaticInitializer::~StaticInitializer(void)
+DKAllocatorChain::Maintainer::~Maintainer(void) noexcept(!DKGL_MEMORY_DEBUG)
 {
 	Chain* c = Chain::Instance();
-	DKASSERT_MEM_DEBUG( c != NULL );
+	DKASSERT_STD_DEBUG( c != NULL );
 	Chain::RefCount ref = c->DecrementRef();
-	DKASSERT_MEM_DEBUG( ref >= 0);
+	DKASSERT_STD_DEBUG( ref >= 0);
 	if (ref == 0)
-	{
 		delete c;
-	}
 }
 
 void* DKAllocatorChain::operator new (size_t s)
 {
-	return ::malloc(s);
+	return DKMemoryHeapAlloc(s);
 }
 
-void DKAllocatorChain::operator delete (void* p) NOEXCEPT
+void DKAllocatorChain::operator delete (void* p) noexcept
 {
-	::free(p);
+	DKMemoryHeapFree(p);
 }
-

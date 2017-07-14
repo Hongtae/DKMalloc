@@ -2,10 +2,10 @@
  File: DKAllocator.cpp
  Author: Hongtae Kim (tiff2766@gmail.com)
 
- Copyright (c) 2015 Hongtae Kim. All rights reserved.
+ Copyright (c) 2015,2017 Hongtae Kim. All rights reserved.
 
- NOTE: This is simplified 'Memory Allocator' part of DKLib.
-  Full version of DKLib: http://github.com/tiff2766/DKLib
+ NOTE: This is simplified 'Memory Allocator' part of DKGL.
+ Full version of DKGL: https://github.com/DKGL/DKGL
 
  License: BSD-3
 *******************************************************************************/
@@ -52,13 +52,13 @@ DKAllocator::DKAllocator(void)
 {
 }
 
-DKAllocator::~DKAllocator(void)
+DKAllocator::~DKAllocator(void) noexcept(!DKGL_MEMORY_DEBUG)
 {
 }
 
 DKAllocator& DKAllocator::DefaultAllocator(DKMemoryLocation loc)
 {
-	static StaticInitializer init;
+	static Maintainer init;
 
 	struct HeapAllocator : public DKAllocator
 	{
@@ -101,18 +101,17 @@ DKAllocator& DKAllocator::DefaultAllocator(DKMemoryLocation loc)
 
 	switch (loc)
 	{
-		case DKMemoryLocationHeap:
-			return *hma;
-			break;
-		case DKMemoryLocationVirtual:
-			return *vma;
-			break;
-		case DKMemoryLocationPool:
-			return *pma;
-			break;
-		default:		// custom?
-			break;
+	case DKMemoryLocationHeap:
+		return *hma;
+		break;
+	case DKMemoryLocationVirtual:
+		return *vma;
+		break;
+	case DKMemoryLocationPool:
+		return *pma;
+		break;
+	default:		// custom?
+		break;
 	}
 	return *hma;
 }
-

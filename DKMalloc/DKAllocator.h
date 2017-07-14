@@ -2,10 +2,10 @@
  File: DKAllocator.h
  Author: Hongtae Kim (tiff2766@gmail.com)
 
- Copyright (c) 2015 Hongtae Kim. All rights reserved.
+ Copyright (c) 2015,2017 Hongtae Kim. All rights reserved.
 
- NOTE: This is simplified 'Memory Allocator' part of DKLib.
-  Full version of DKLib: http://github.com/tiff2766/DKLib
+ NOTE: This is simplified 'Memory Allocator' part of DKGL.
+ Full version of DKGL: https://github.com/DKGL/DKGL
 
  License: BSD-3
 *******************************************************************************/
@@ -54,21 +54,23 @@
 
 namespace DKFoundation
 {
-	class DKLIB_API DKAllocator : public DKAllocatorChain
+	/// Interface class for memory allocation, deallocation.
+	class DKGL_API DKAllocator : public DKAllocatorChain
 	{
 	public:
-		virtual ~DKAllocator(void);
+		virtual ~DKAllocator(void) noexcept(!DKGL_MEMORY_DEBUG);
 		virtual void* Alloc(size_t) = 0;
 		virtual void Dealloc(void*) = 0;
 		virtual DKMemoryLocation Location(void) const = 0;
 
-		static DKAllocator& DefaultAllocator(DKMemoryLocation loc = DKMemoryLocationHeap);
+		/// Default allocator instance for given location
+		static DKAllocator& DefaultAllocator(DKMemoryLocation loc = DKMemoryLocationDefault);
 
 	protected:
 		DKAllocator(void);
 
 	private:
-		DKAllocator(const DKAllocator&);				/* = deleted */
-		DKAllocator& operator = (const DKAllocator&);	/* = deleted */
+		DKAllocator(const DKAllocator&) = delete;
+		DKAllocator& operator = (const DKAllocator&) = delete;
 	};
 }

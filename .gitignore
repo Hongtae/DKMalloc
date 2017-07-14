@@ -14,6 +14,7 @@ ipch/
 *.opensdf
 *.sdf
 *.cachefile
+**/.vs/
 
 # Visual Studio profiler
 *.psess
@@ -52,3 +53,4 @@ __pycache__/
 
 # project settings
 Build/**
+

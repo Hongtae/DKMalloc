@@ -61,7 +61,7 @@
 #include <stdlib.h>
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define DKLIB_DEBUG_ENABLED 1
+#define DKGL_DEBUG_ENABLED 1
 #include <stdexcept>
 #define DKERROR_THROW_DEBUG(desc)			throw std::runtime_error(desc)
 #define DKASSERT_DESC_DEBUG(expr, desc)		{if (!(expr)) throw std::runtime_error(desc);}
@@ -80,15 +80,15 @@
 #define DKASSERT_STD_DEBUG(expr)			(void)0
 #endif
 
-#ifndef DKLIB_MEMORY_DEBUG
-#ifdef DKLIB_DEBUG_ENABLED
-#define DKLIB_MEMORY_DEBUG 1
+#ifndef DKGL_MEMORY_DEBUG
+#ifdef DKGL_DEBUG_ENABLED
+#define DKGL_MEMORY_DEBUG 1
 #else
-#define DKLIB_MEMORY_DEBUG 0
+#define DKGL_MEMORY_DEBUG 0
 #endif
-#endif /* DKLIB_MEMORY_DEBUG */
+#endif /* DKGL_MEMORY_DEBUG */
 
-#if DKLIB_MEMORY_DEBUG
+#if DKGL_MEMORY_DEBUG
 #define DKASSERT_MEM_DESC(expr, desc)		{if (!(expr)) throw std::runtime_error(desc);}
 #define DKASSERT_MEM(expr)					{if (!(expr)) throw std::runtime_error("");}
 #define DKASSERT_MEM_DESC_DEBUG(expr, desc)	DKASSERT_STD_DESC(expr, desc)
@@ -103,7 +103,7 @@
 
 // Inline macros
 #ifndef FORCEINLINE
-#ifdef DKLIB_DEBUG_ENABLED
+#ifdef DKGL_DEBUG_ENABLED
 #define FORCEINLINE inline
 #else
 #ifdef _MSC_VER
@@ -129,8 +129,8 @@
 #endif
 #endif
 
-#ifndef DKLIB_API
-#define DKLIB_API
+#ifndef DKGL_API
+#define DKGL_API
 #endif
 
 #define DKLog(...)	printf(__VA_ARGS__)
@@ -174,39 +174,39 @@ namespace DKFoundation
 	template <typename T> using _UnRefCV = _UnCV<_UnRef<T>>;
 
 	// Min
-	template <typename T> auto Min(T&& lhs, T&& rhs)->T&&
+	template <typename T> FORCEINLINE auto Min(T&& lhs, T&& rhs)->T&&
 	{
 		return std::forward<T>((lhs < rhs) ? lhs : rhs);
 	}
-	template <typename T, typename U> auto Min(T&& lhs, U&& rhs)->_UnRefCV<T>
+	template <typename T, typename U> FORCEINLINE auto Min(T&& lhs, U&& rhs)->_UnRefCV<T>
 	{
 		return static_cast<_UnRef<T>>((lhs < rhs) ? lhs : rhs);
 	}
-	template <typename T, typename U, typename... V> auto Min(T&& v1, U&& v2, V&&... rest)->_UnRefCV<T>
+	template <typename T, typename U, typename... V> FORCEINLINE auto Min(T&& v1, U&& v2, V&&... rest)->_UnRefCV<T>
 	{
 		return Min(std::forward<T>(v1), Min(std::forward<U>(v2), std::forward<V>(rest)...));
 	}
 
 	// Max
-	template <typename T> auto Max(T&& lhs, T&& rhs)->T&&
+	template <typename T> FORCEINLINE auto Max(T&& lhs, T&& rhs)->T&&
 	{
 		return std::forward<T>((lhs > rhs) ? lhs : rhs);
 	}
-	template <typename T, typename U> auto Max(T&& lhs, U&& rhs)->_UnRefCV<T>
+	template <typename T, typename U> FORCEINLINE auto Max(T&& lhs, U&& rhs)->_UnRefCV<T>
 	{
 		return static_cast<_UnRef<T>>(((lhs > rhs) ? lhs : rhs));
 	}
-	template <typename T, typename U, typename... V> auto Max(T&& v1, U&& v2, V&&... rest)->_UnRefCV<T>
+	template <typename T, typename U, typename... V> FORCEINLINE auto Max(T&& v1, U&& v2, V&&... rest)->_UnRefCV<T>
 	{
 		return Max(std::forward<T>(v1), Max(std::forward<U>(v2), std::forward<V>(rest)...));
 	}
 
 	// Clamp
-	template <typename T> auto Clamp(T&& v, T&& _min, T&& _max)->T&&
+	template <typename T> FORCEINLINE auto Clamp(T&& v, T&& _min, T&& _max)->T&&
 	{
 		return Min(Max(std::forward<T>(v), std::forward<T>(_min)), std::forward<T>(_max));
 	}
-	template <typename T, typename MinT, typename MaxT> auto Clamp(T&& v, MinT&& _min, MaxT&& _max)->_UnRefCV<T>
+	template <typename T, typename MinT, typename MaxT> FORCEINLINE auto Clamp(T&& v, MinT&& _min, MaxT&& _max)->_UnRefCV<T>
 	{
 		return Min(Max(std::forward<T>(v), std::forward<MinT>(_min)), std::forward<MaxT>(_max));
 	}

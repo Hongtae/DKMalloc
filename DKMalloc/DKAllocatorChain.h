@@ -2,10 +2,10 @@
  File: DKAllocatorChain.h
  Author: Hongtae Kim (tiff2766@gmail.com)
 
- Copyright (c) 2015 Hongtae Kim. All rights reserved.
+ Copyright (c) 2015,2017 Hongtae Kim. All rights reserved.
 
- NOTE: This is simplified 'Memory Allocator' part of DKLib.
-  Full version of DKLib: http://github.com/tiff2766/DKLib
+ NOTE: This is simplified 'Memory Allocator' part of DKGL.
+ Full version of DKGL: https://github.com/DKGL/DKGL
 
  License: BSD-3
 *******************************************************************************/
@@ -68,11 +68,28 @@
 
 namespace DKFoundation
 {
-	class DKLIB_API DKAllocatorChain
+	/// @brief
+	///  An abstract class, a memory allocator chain class.
+	///  implemented as linked-list.
+	///  subclass will be added to chain automatically when they are instantiated.
+	///
+	/// @note
+	///  If you need to use DKAllocator with static (global) object initialization,
+	///  You have to hold Maintainer instance as static storage
+	/// @note
+	///  The Maintainer will postpone destruction of internal allocators and
+	///  allocation pools until all Maintainer instances are destroyed.
+	///  It is necessary to internal allocator become persistent even when main()
+	///  function has been finished. (even after atexit() called)
+	///
+	///  Maintainer Usage:
+	///    Just declare static instance before using any allocators in global scope.
+	///    It is not necessary for function scope inside of main() routine.
+	class DKGL_API DKAllocatorChain
 	{
 	public:
 		DKAllocatorChain(void);
-		virtual ~DKAllocatorChain(void);
+		virtual ~DKAllocatorChain(void) noexcept(!DKGL_MEMORY_DEBUG);
 
 		virtual void* Alloc(size_t) = 0;
 		virtual void Dealloc(void*) = 0;
@@ -84,17 +101,18 @@ namespace DKFoundation
 		static DKAllocatorChain* FirstAllocator(void);
 		DKAllocatorChain* NextAllocator(void);
 
-
-		// To extend static-object life cycle, a static-object which own
-		// DKAllocator, it should have StaticInitializer instance with static storage.
-		struct StaticInitializer
+		/// @brief Prevent destruction of allocator-chain of located in static
+		///  storage at application is being terminated
+		///  To extend static-object life cycle, a static-object which own
+		///  DKAllocator, it should have Maintainer instance with static storage.
+		struct DKGL_API Maintainer
 		{
-			StaticInitializer(void);
-			~StaticInitializer(void);
+			Maintainer(void);
+			~Maintainer(void) noexcept(!DKGL_MEMORY_DEBUG);
 		};
 
 		void* operator new (size_t);
-		void operator delete (void*) NOEXCEPT;
+		void operator delete (void*) noexcept;
 	private:
 		DKAllocatorChain* next;
 	};

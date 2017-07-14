@@ -2,10 +2,10 @@
  File: DKFixedSizeAllocator.h
  Author: Hongtae Kim (tiff2766@gmail.com)
 
- Copyright (c) 2015 Hongtae Kim. All rights reserved.
+ Copyright (c) 2015,2017 Hongtae Kim. All rights reserved.
 
- NOTE: This is simplified 'Memory Allocator' part of DKLib.
-  Full version of DKLib: http://github.com/tiff2766/DKLib
+ NOTE: This is simplified 'Memory Allocator' part of DKGL.
+ Full version of DKGL: https://github.com/DKGL/DKGL
 
  License: BSD-3
 *******************************************************************************/
@@ -39,25 +39,33 @@
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- *******************************************************************************/
+*******************************************************************************/
+
 
 #pragma once
+#include <algorithm>
 #include "DKDef.h"
 #include "DKSpinLock.h"
 #include "DKAllocator.h"
+#include "DKMemory.h"
+#include "DKSpinLock.h"
 
-////////////////////////////////////////////////////////////////////////////////
-// DKFixedSizeAllocator
-// an allocator which can allocate memory of fixed length.
-// it is useful to template collection classes like DKMap, DKSet.
-////////////////////////////////////////////////////////////////////////////////
 
 namespace DKFoundation
 {
+	/// @brief An allocator which can allocate memory of fixed length.
+	/// it is useful to template collection classes like DKMap, DKSet.
+	///
+	/// @tparam UnitSize       allocation size (fixed size)
+	/// @tparam Alignment      byte alignment (default:1)
+	/// @tparam MaxUnits       max units per chunk (default:1024)
+	/// @tparam Lock           locking class
+	/// @tparam BaseAllocator  internal allocator (for internal-table, small size)
+	/// @tparam UnitAllocator  unit chunk allocator. (large size)
 	template <
 		unsigned int UnitSize,				// allocation size (fixed size)
 		unsigned int Alignment = 1,			// byte alignment
-		unsigned int MaxUnits = 1024,			// max units per chunk
+		unsigned int MaxUnits = 1024,		// max units per chunk
 		typename Lock = DKSpinLock,
 		typename BaseAllocator = DKMemoryDefaultAllocator, // info table allocator. (small)
 		typename UnitAllocator = DKMemoryDefaultAllocator  // unit chunk allocator. (large)
@@ -72,27 +80,27 @@ namespace DKFoundation
 		static_assert((Alignment & (Alignment - 1)) == 0, "Alignment must be power of two.");
 
 		// maximum number of units per chunk.
-		enum : unsigned int { MaxUnitsPerChunk = MaxUnits };
-		enum : unsigned int { AlignedUnitSize = (UnitSize + (Alignment - 1)) & ~(Alignment - 1) };
+		enum : uint32_t { MaxUnitsPerChunk = MaxUnits };
+		enum : uint32_t { AlignedUnitSize = (UnitSize + (Alignment - 1)) & ~(Alignment - 1) };
 		union Unit
 		{
-			unsigned char data[AlignedUnitSize];
-			unsigned int nextUnitIndex;
+			uint8_t data[AlignedUnitSize];
+			uint32_t nextUnitIndex;
 		};
 		static_assert((sizeof(Unit) % Alignment) == 0, "Invalid unit alignment");
 
 		using Index = unsigned int;
-		enum : Index { EndOfUnits = (Index)-1 };
+		enum : Index { EndOfUnits = ~Index(0) };
 
 		struct ChunkInfo
 		{
 			uintptr_t address;
 			Index freeUnitIndex;
-			unsigned short offset;
-			unsigned short occupied;
+			uint16_t offset;
+			uint16_t occupied;
 		};
 
-		// size of all units per chunk.
+		// size of all units per chunk. (in bytes)
 		enum : size_t { MaxUnitsPerChunkSize = sizeof(Unit) * MaxUnitsPerChunk };
 
 		using CriticalSection = DKCriticalSection < Lock > ;
@@ -117,7 +125,7 @@ namespace DKFoundation
 			virtual void* AlignedChunkAddress(void*) const = 0;
 		};
 
-		// DKAllocator instance (shared), with alignment
+		/// DKAllocator instance (shared), with alignment
 		static DKAllocator& AllocatorInstance(void)
 		{
 			// shared instance located in RebindAlignment<BaseAlignment>
@@ -163,11 +171,11 @@ namespace DKFoundation
 					return NULL;	// out of memory!
 
 				uintptr_t pos = reinterpret_cast<uintptr_t>(
-					std::upper_bound(&chunkTable[0], &chunkTable[numChunks], chunk.address,
-					[](uintptr_t lhs, const ChunkInfo& rhs)
-				{
-					return lhs < rhs.address;
-				}));
+															std::upper_bound(&chunkTable[0], &chunkTable[numChunks], chunk.address,
+																			 [](uintptr_t lhs, const ChunkInfo& rhs)
+																			 {
+																				 return lhs < rhs.address;
+																			 }));
 				size_t chunkIndex = (pos - reinterpret_cast<uintptr_t>(&chunkTable[0])) / sizeof(ChunkInfo);
 
 				if (chunkIndex < numChunks)
@@ -257,7 +265,7 @@ namespace DKFoundation
 			return false;
 		}
 
-		// returns Chunk starting address if ptr was allocated from this object.
+		/// returns Chunk starting address if ptr was allocated from this object.
 		void* AlignedChunkAddress(void* ptr) const
 		{
 			if (ptr)
@@ -273,7 +281,7 @@ namespace DKFoundation
 			return NULL;
 		}
 
-		void Reserve(size_t n)		// preallocate
+		void Reserve(size_t n)		///< preallocate
 		{
 			if (n > 0)
 			{
@@ -326,12 +334,14 @@ namespace DKFoundation
 			return 0;
 		}
 
-		size_t Purge(void)	// delete unoccupied chunks
+		/// delete unoccupied chunks
+		size_t Purge(void)	
 		{
 			CriticalSection guard(lock);
 			return PurgeInternal();
 		}
 
+		/// Total allocation size, including reserved space, in bytes
 		size_t Size(void) const
 		{
 			CriticalSection guard(lock);
@@ -344,6 +354,14 @@ namespace DKFoundation
 			return numAllocated;
 		}
 
+		/// total units in this container.
+		/// reserved = num_units - allocated_units(NumberOfAllocatedUnits)
+		size_t NumberOfUnits(void) const
+		{
+			CriticalSection guard(lock);
+			return numChunks * MaxUnitsPerChunk;
+		}
+
 		DKFixedSizeAllocator(void)
 			: chunkTable(NULL)
 			, cachedChunk(NULL)
@@ -353,7 +371,7 @@ namespace DKFoundation
 		{
 		}
 
-		~DKFixedSizeAllocator(void)
+		~DKFixedSizeAllocator(void) noexcept(!DKGL_MEMORY_DEBUG)
 		{
 			DKASSERT_MEM_DEBUG(numAllocated == 0);
 			if (numChunks > 0)
@@ -472,20 +490,20 @@ namespace DKFoundation
 			if (numChunks > 1)
 			{
 				std::sort(&chunkTable[0], &chunkTable[numChunks],
-					[](const ChunkInfo& lhs, const ChunkInfo& rhs)
-				{
-					return lhs.address < rhs.address;
-				});
+						  [](const ChunkInfo& lhs, const ChunkInfo& rhs)
+						  {
+							  return lhs.address < rhs.address;
+						  });
 			}
 		}
 		FORCEINLINE ChunkInfo* FindChunkInfo(uintptr_t addr) const
 		{
 			uintptr_t pos = reinterpret_cast<uintptr_t>(
-				std::upper_bound(&chunkTable[0], &chunkTable[numChunks], addr,
-				[](uintptr_t lhs, const ChunkInfo& rhs)
-			{
-				return lhs < rhs.address;
-			}));
+														std::upper_bound(&chunkTable[0], &chunkTable[numChunks], addr,
+																		 [](uintptr_t lhs, const ChunkInfo& rhs)
+																		 {
+																			 return lhs < rhs.address;
+																		 }));
 			size_t index = ((pos - reinterpret_cast<uintptr_t>(&chunkTable[0])) / sizeof(ChunkInfo)) - 1;
 			if (index < numChunks && addr < chunkTable[index].address + MaxUnitsPerChunkSize)
 				return &chunkTable[index];
@@ -585,11 +603,11 @@ namespace DKFoundation
 				DKMemoryLocation Location(void) const override	{ return (DKMemoryLocation)BaseAllocator::Location; }
 				DKFixedSizeAllocator allocator;
 			};
-			static DKAllocatorChain::StaticInitializer init; // extend allocator life cycle.
+			static DKAllocatorChain::Maintainer init; // extend allocator life cycle.
 			static AllocatorWrapper* instance = new AllocatorWrapper();
 			return *instance;
 		}
-
+		
 		ChunkInfo* chunkTable;
 		ChunkInfo* cachedChunk;		// for fast-alloc
 		size_t numAllocated;

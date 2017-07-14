@@ -2,10 +2,10 @@
  File: DKMalloc.h
  Author: Hongtae Kim (tiff2766@gmail.com)
 
- Copyright (c) 2015 Hongtae Kim. All rights reserved.
+ Copyright (c) 2015,2017 Hongtae Kim. All rights reserved.
 
- NOTE: This is simplified 'Memory Allocator' part of DKLib.
-  Full version of DKLib: http://github.com/tiff2766/DKLib
+ NOTE: This is simplified 'Memory Allocator' part of DKGL.
+ Full version of DKGL: https://github.com/DKGL/DKGL
 
  License: BSD-3
 *******************************************************************************/
@@ -44,9 +44,11 @@
 #pragma once
 #include <stddef.h> /* for size_t */
 
-/*
+/**
   DK allocator, allocate memory.
   Returned memory address will be aligned with 16-bytes at least.
+
+  If the requested size is greater than 32k, DKMalloc uses the system VM to allocate space.
 */
 
 #ifdef __cplusplus
@@ -59,7 +61,7 @@ extern "C"
 
 	/* explicit cleanup. (useful to low-memory situation) */
 	size_t DKMemPurge(void);
-	size_t DKMemPoolSize(void);
+	size_t DKMemPoolSize(void); /* Allocated size, each allocation is less than 32KB */
 
 #ifdef __cplusplus
 }

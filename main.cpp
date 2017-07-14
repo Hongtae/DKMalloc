@@ -11,8 +11,13 @@
 #include <time.h>
 #include <string>
 
-#define TEST_SYSTEM_DEFAULT_MALLOC 0  // set 1 to test system default 'malloc', 'free'
+#define TEST_SYSTEM_DEFAULT_MALLOC 1  // set 1 to test system default 'malloc', 'free'
 #define TEST_TBB_SCALABLE_ALLOCATOR 0 // set 1 to test TBB-scalable allocator'
+
+#define TEST_LARGE_BLOCKS 0	 // set 1 to test large-blocks
+
+#define NUM_ALLOCATIONS_SMALL_BLOCKS 20000000	// num allocs for small blocks
+#define NUM_ALLOCATIONS_LARGE_BLOCKS 1000000	// num allocs for large blocks
 
 // before testing TBB, you need to download and install TBB
 // TBB official web page: https://www.threadingbuildingblocks.org
@@ -25,10 +30,6 @@
 #include "DKMalloc/DKMalloc.h"
 #include "DKTimer.h"
 
-
-#ifndef TEST_LARGE_BLOCKS
-#define TEST_LARGE_BLOCKS 0	 // set 1 to test large-blocks
-#endif
 
 
 #ifdef _WIN32
@@ -116,10 +117,18 @@ int _tmain(int argc, _TCHAR* argv[])
 int main(int argc, const char * argv[])
 #endif
 {
+	if (sizeof(void*) < 8)
+	{
+		printf("##########################################################\n");
+		printf("###                    Warning                         ###\n");
+		printf("###    Select 64-Bit platform to test over 4GB.        ###\n");
+		printf("##########################################################\n");
+		printf("\n");
+	}
 #ifndef NDEBUG
-	printf("Run-test debug-mode.\n");
+	printf("Run-test DEBUG-mode.\n");
 #else
-	printf("Run-test release-mode.\n");
+	printf("Run-test RELEASE-mode.\n");
 #endif
 
 #if TEST_TBB_SCALABLE_ALLOCATOR
@@ -133,15 +142,15 @@ int main(int argc, const char * argv[])
 #if TEST_LARGE_BLOCKS
 	const size_t allocSizeArray[] =
 	{
-		128, 256, 1024, 2048, 4096, 8192, 131072
+		128, 256, 1024, 2048, 4096, 8192, 32768, 65536
 	};
-	const size_t numAllocs = 1000000;
+	const size_t numAllocs = NUM_ALLOCATIONS_LARGE_BLOCKS;
 #else
 	const size_t allocSizeArray[] =
 	{
-        8, 16, 24, 32, 48, 64, 128, 192, 256, 512, 1024, 2048
+        8, 16, 32, 48, 64, 128, 192, 256, 512, 1024, 2048, 4096, 8192
 	};
-    const size_t numAllocs = 20000000;
+    const size_t numAllocs = NUM_ALLOCATIONS_SMALL_BLOCKS;
 #endif
 
 	struct AllocInfo
@@ -186,10 +195,10 @@ int main(int argc, const char * argv[])
 
 	AllocatorFunc allocators[] = {
 #if TEST_SYSTEM_DEFAULT_MALLOC
-		{ "malloc", malloc, realloc, free, false },
+		{ "System default malloc", malloc, realloc, free, false },
 #endif
 #if TEST_TBB_SCALABLE_ALLOCATOR
-		{ "TBB", scalable_malloc, scalable_realloc, scalable_free, false },
+		{ "Intel TBB", scalable_malloc, scalable_realloc, scalable_free, false },
 #endif
 		{ "DKMalloc", DKMalloc, DKRealloc, DKFree, false },
 	};
@@ -249,7 +258,7 @@ int main(int argc, const char * argv[])
 
 	size_t numAllocators = NumArrayItems(allocators);
 
-	for (int i = 0; i < numAllocators; ++i)
+	for (size_t i = 0; i < numAllocators; ++i)
 	{
 		AllocatorFunc& alloc = allocators[i];
 		printf("\nTesting allocator[%d]... (%s)\n", i, alloc.desc);
@@ -274,7 +283,7 @@ int main(int argc, const char * argv[])
 	delete[] allocArray;
 
 	printf("\n---------------------------------------\n");
-	for (int i = 0; i < numAllocators; ++i)
+	for (size_t i = 0; i < numAllocators; ++i)
 	{
 		printf("    alloc: %f, free: %f - [%s]\n",
 			allocators[i].allocTime, allocators[i].deallocTime, allocators[i].desc);
