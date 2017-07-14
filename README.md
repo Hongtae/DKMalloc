@@ -34,11 +34,11 @@ This is simplified 'Memory Allocator' part of DKGL.
     
 1. Adjust allocation unit count at **main.cpp** line **19** or **20**
     - for testing small blocks (line 19)
-        ```c_cpp
+        ```cpp
         #define NUM_ALLOCATIONS_SMALL_BLOCKS 20000000	// num allocs for small blocks
         ```
     - for testing large blocks (line 20)
-        ```c_cpp
+        ```cpp
         #define NUM_ALLOCATIONS_LARGE_BLOCKS 1000000	// num allocs for large blocks
         ```
 1. Build and Run with **64BIT RELEASE MODE**
