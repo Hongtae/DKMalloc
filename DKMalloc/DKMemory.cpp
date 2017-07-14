@@ -453,8 +453,8 @@ namespace DKFoundation
 					size_t numAllocated = allocators[i].allocator->NumberOfAllocatedUnits();
 					if ( numAllocated > 0)
 					{
-						DKLog("MEMORY LEAK WARNING: %lu objects (%d bytes unit) still occupied.\n",
-							  numAllocated, (int)allocators[i].unitSize);
+						DKLog("MEMORY LEAK WARNING: %llu objects (%d bytes unit) still occupied.\n",
+							  static_cast<unsigned long long>(numAllocated), (int)allocators[i].unitSize);
 						cleanupHeap = false;
 					}
 					else

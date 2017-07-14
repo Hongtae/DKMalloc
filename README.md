@@ -1,14 +1,14 @@
 # DKMalloc
-Memory pool allocator. C / C++
-Optimized for quick alloc, realloc, free.
+Memory pool allocator. C / C++.  
+Optimized for quick alloc, realloc, free.  
 
-You can use DKMalloc for your project.
-Build DKMalloc as a shared library / DLL for C projects that can not use C\++.
+You can use DKMalloc for your project.  
+Build DKMalloc as a shared library / DLL for C projects that can not use C\++.  
 (essential functions are defined as C-linkage)
 
 
-This is simplified 'Memory Allocator' part of DKGL.
- Full version of DKGL: https://github.com/DKGL/DKGL
+This is simplified 'Memory Allocator' part of DKGL.  
+ Full version of DKGL: https://github.com/DKGL/DKGL  
 
 
 ## Performance Test
@@ -41,7 +41,7 @@ This is simplified 'Memory Allocator' part of DKGL.
         ```cpp
         #define NUM_ALLOCATIONS_LARGE_BLOCKS 1000000	// num allocs for large blocks
         ```
-1. Build and Run with **64BIT RELEASE MODE**
+1. Build and Run with **X64 RELEASE MODE**
 
 ## Platform
 - Windows (x86, x64)
