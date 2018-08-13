@@ -942,10 +942,10 @@ namespace DKFoundation
 					void* p2 = ::VirtualAlloc(0, s, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 					if (p2)
 					{
-						memcpy(p2, p, (alignedSize > memInfo.RegionSize ? memInfo.RegionSize : s));
-						::VirtualFree(p, 0, MEM_RELEASE);
 						DKASSERT_MEM_DEBUG(VMSizeInfo::Unset(p));
 						DKASSERT_MEM_DEBUG(VMSizeInfo::Set(p2, alignedSize));
+						memcpy(p2, p, (alignedSize > memInfo.RegionSize ? memInfo.RegionSize : s));
+						::VirtualFree(p, 0, MEM_RELEASE);
 					}
 					p = p2;
 				}
@@ -1017,6 +1017,7 @@ namespace DKFoundation
 			}
 			else
 			{
+				VMSizeInfo::Unset(p);
 				VMSizeInfo::Set(p2, alignedSize);
 
 				size_t bytesCopy = Min(sizeOrig, alignedSize);
@@ -1027,7 +1028,6 @@ namespace DKFoundation
 				{
 					DKLog("munmap failed: %s\n", strerror(errno));
 				}
-				VMSizeInfo::Unset(p);
 				p = p2;
 			}
 #endif
@@ -1050,11 +1050,8 @@ namespace DKFoundation
 		if (p)
 		{
 #ifdef _WIN32
-			if (::VirtualFree(p, 0, MEM_RELEASE))
-			{
-				DKASSERT_MEM_DEBUG(VMSizeInfo::Unset(p));
-			}
-			else
+			DKASSERT_MEM_DEBUG(VMSizeInfo::Unset(p));
+			if (!::VirtualFree(p, 0, MEM_RELEASE))
 			{
 				DKASSERT_MEM_DESC_DEBUG(0, "VirtualFree failed");
 				DKLog("VirtualFree failed:%ls\n", Win32GetErrorString(::GetLastError()).c_str());
@@ -1065,11 +1062,11 @@ namespace DKFoundation
 			if (s > 0)
 			{
 				DKASSERT_MEM_DEBUG((s % DKMemoryPageSize()) == 0);
+				VMSizeInfo::Unset(p);
 				if (::munmap(p, s) != 0)
 				{
 					DKLog("munmap failed: %s\n", strerror(errno));
 				}
-				VMSizeInfo::Unset(p);
 			}
 #endif
 		}
@@ -1176,11 +1173,8 @@ namespace DKFoundation
 				DKLog("VirtualQuery failed:%ls\n", Win32GetErrorString(::GetLastError()).c_str());
 			}
 #endif
-			if (::VirtualFree(p, 0, MEM_RELEASE))
-			{
-				DKASSERT_MEM_DEBUG(VMSizeInfo::Unset(p));
-			}
-			else
+			DKASSERT_MEM_DEBUG(VMSizeInfo::Unset(p));
+			if (!::VirtualFree(p, 0, MEM_RELEASE))
 			{
 				DKASSERT_MEM_DESC_DEBUG(0, "VirtualFree failed");
 				DKLog("VirtualFree failed:%ls\n", Win32GetErrorString(::GetLastError()).c_str());
@@ -1190,12 +1184,12 @@ namespace DKFoundation
 			if (s > 0)
 			{
 				//mumap..
+				VMSizeInfo::Unset(p);
 				if (::munmap(p, s) != 0)
 				{
 					DKASSERT_MEM_DESC_DEBUG(0, "munmap failed");
 					DKLog("munmap failed:%s\n", strerror(errno));
 				}
-				VMSizeInfo::Unset(p);
 			}
 			else
 			{
